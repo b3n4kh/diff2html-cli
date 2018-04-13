@@ -7,6 +7,7 @@
 
 (function() {
   var os = require('os');
+  var fs = require('fs');
   var path = require('path');
 
   var diff2Html = require('diff2html').Diff2Html;
@@ -100,6 +101,12 @@
 
   Diff2HtmlInterface.prototype._prepareHTML = function(content, config) {
     var templatePath = path.resolve(__dirname, '..', 'dist', 'template.html');
+    if (config.template) {
+      var customTemplatePath = path.resolve(config.template);
+      if (fs.statSync(customTemplatePath).isFile()) {
+        templatePath = customTemplatePath;
+      }
+    }
     var template = utils.readFileSync(templatePath);
 
     var diff2htmlPath = path.join(path.dirname(require.resolve('diff2html')), '..');
